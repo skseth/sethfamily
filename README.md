@@ -46,7 +46,7 @@ Advanced users can checkout the repository using git clone.
 
 ```shell
 cd work
-git clone git@github.com:skseth/sethfamily.git
+git clone https://github.com/skseth/sethfamily.git
 ```
 
 ## Initialize npm modules
@@ -82,7 +82,7 @@ cd <TO THE INSTALL FOLDER>
 npm start
 ```
 
-In your browser, visit the site : https://localhost:3000/
+In your browser, visit the site : http://localhost:3000/
 
 
 
