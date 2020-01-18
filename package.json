@@ -1,0 +1,19 @@
+{
+  "name": "timeline",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server/server.js",
+    "start.local": "node server/serverLocal.js",
+    "generate": "node server/generateFiles.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "csv-parser": "^2.3.2",
+    "express": "^4.17.1",
+    "googleapis": "^47.0.0"
+  }
+}
