@@ -26,10 +26,30 @@ For downloading as a zip file, click on the "Clone or Download" button on this p
 
 Advanced users can checkout the repository using git clone.
 
-```
+```shell
 cd work
 git clone git@github.com:skseth/sethfamily.git
 ```
+
+## Initialize npm modules
+
+In "Command Prompt" or "Terminal" go to the sethfamily folder and run the followinng commands :
+
+On Windows :
+
+```shell
+cd C:\work\sethfamily
+npm update
+```
+
+On Mac :
+
+```shell
+cd ~/work/sethfamily
+npm update
+```
+
+You can run this command any number of times.
 
 ## Copy secrets.json
 
@@ -39,7 +59,8 @@ You will be provided a secrets.json file separately - this needs to be copied in
 
 In Command Prompt, or Terminal, run the following command :
 
-```
+```shell
+cd <TO THE INSTALL FOLDER>
 npm start
 ```
 
