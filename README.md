@@ -24,6 +24,24 @@ For downloading as a zip file, click on the "Clone or Download" button on this p
 * $HOME/work/sethfamily for Mac
 * C:/work/sethfamily for Windows
 
+Instructions for mac :
+
+Download the zip file from github. You should have a file called sethfamily-master.zip in Downloads folder.
+
+```shell
+cd ~
+mkdir work (if it does not exist)
+cd work
+unzip ~/Downloads/sethfamily-master.zip
+```
+
+You should now have a folder called sethfamily-master
+
+```shell
+mv sethfamily-master sethfamily
+rm ~/Downloads/sethfamily-master.zip
+```
+
 Advanced users can checkout the repository using git clone.
 
 ```shell
