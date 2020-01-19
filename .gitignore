@@ -4,3 +4,4 @@ json/
 secrets/
 secrets.json
 .DS_Store
+.firebase/

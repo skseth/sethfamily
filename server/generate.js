@@ -53,22 +53,28 @@ function generateFile(label) {
 }
 
 function initTimelineEntry(year, month, day, headline, text, media, caption) {
-    return {
-        "media": {
-        "url": media,
-        "caption": caption,
-        "credit": ""
-        },
+    let entry = {
         "start_date": {
-        "month": month,
-        "day": day,
-        "year": year
+            "month": month,
+            "day": day,
+            "year": year
         },
         "text": {
-        "headline": headline,
-        "text": text
+            "headline": headline,
+            "text": text
         }
     }
+
+    if (media) {
+        entry.media = {
+            "url": media,
+            "caption": caption,
+            "credit": ""
+        }
+    }
+
+    return entry
+
 }
 
 function processInputFile(filename) {
@@ -175,6 +181,9 @@ function generateResult(label, lab_results) {
 }
 
 function containsLabel(filterlabel, labelstr) {
+    if (filterlabel == "all") {
+        return true;
+    }
 
     if (!labelstr) {
         return false
