@@ -1,0 +1,21 @@
+rules_version = '2';
+
+service firebase.storage {
+  function isAuthValid() {
+    return request.auth != null;
+  }
+
+  function isFamilyOrGuest() {
+    return isAuthValid() && (request.auth.token.isFamily == true || request.auth.token.isGuest == true)
+  }
+
+  function is
+
+  match /b/{bucket}/o {
+    match /{allPaths=**} {
+      allow read: if isFamilyOrGuest();
+      allow write: if false;
+    }
+  }
+}
+

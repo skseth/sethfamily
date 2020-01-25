@@ -3,7 +3,7 @@
         "all": {
             "title": "All",
             "headline": "Seth Family Timeline",
-            "text": "The family tree of the Seth family, starting with Behari Lal and Rukmani Bai Seth c. 2014 appears on the left"
+            "text": "The family tree"
         },
         "anniv": {
             "title": "Anniversary",
@@ -19,6 +19,11 @@
             "title": "Group",
             "headline": "Seth Family Timeline - Groups",
             "text": "All together now!"
+        },
+        "death": {
+            "title": "Deaths",
+            "headline": "Seth Family Timeline - Deaths",
+            "text": "Lost ones"
         }
     }
 }

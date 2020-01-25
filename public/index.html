@@ -1,83 +1,252 @@
-<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Seth Family Timeline</title>
-    <meta charset="utf-8">
-    <meta name="description" content="TimelineJS example">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-touch-fullscreen" content="yes">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-    <!-- Style-->
-    <style>
-      html, body {
-       height:100%;
-       padding: 0px;
-       margin: 0px;
-      }
-
-      button.tlfilter {
-        background-color: lightgray;
-        margin-top: 20px;
-        margin-left: 20px;
-        cursor:pointer;
-        padding: 5px;
-        font-size: large;
-        font-variant-caps: all-small-caps;
-      }
-
-    .tlfilter:hover {
-      background-color: lightcoral;
-      color:white;
-    }
-    </style>
-
-    <!-- 1 -->
-    <link title="timeline-styles" rel="stylesheet" href="timeline3/css/timeline.css">
-    <link title="timeline-styles" rel="stylesheet" href="timeline3/css/fonts/font.pt.css">
-
-    <!-- 2 -->
-    <script src="timeline3/js/timeline.js"></script>
-
-  </head>
-  <body>
-      <!-- BEGIN Timeline Embed -->
-      <div id='timeline-embed' style="width: 100%; height: 600px"></div>
-      
-
-      <!-- 3 -->
-      <script type="text/javascript">
-        var additionalOptions = {
-          font: "Default",
-          lang: "en",
-          initial_zoom: 2,
-          height: 650
-        };
-
-
-
-        function show(label) {
-          timeline = new TL.Timeline('timeline-embed',
-            `json/sethfamily-${label}.json`,
-            additionalOptions);
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <!-- Compiled and minified CSS -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
+  <title>Seth Family Website</title>
+      <!-- Style-->
+      <style>
+        html, body {
+         height:100%;
+         padding: 0px;
+         margin: 0px;
         }
+  
+        button.tlfilter {
+          background-color: lightgray;
+          margin-top: 5px;
+          margin-left: 10px;
+          margin-bottom: 5px;
+          cursor:pointer;
+          padding: 5px;
+          font-size: large;
+          font-variant-caps: all-small-caps;
+        }
+  
+      .tlfilter:hover {
+        background-color: lightcoral;
+        color:white;
+      }
+      </style>
+  
+      <!-- 1 -->
+      <link title="timeline-styles" rel="stylesheet" href="timeline3/css/timeline.css">
+      <link title="timeline-styles" rel="stylesheet" href="timeline3/css/fonts/font.pt.css">
+  
+      <!-- 2 -->
+      <script src="timeline3/js/timeline.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/publicalbum@latest/embed-ui.min.js" async></script>
+  
+</head>
+<body class="grey lighten-3"">
 
-        show('anniv')
+  <!-- NAVBAR -->
+  <nav class="z-depth-0 grey lighten-4">
+    <div class="nav-wrapper container">
+      <a href="#" class="brand-logo">
+        <img src="img/icon-clean-alpha.png" style="width: 70px; margin-top: 10px;">
+      </a>
+      <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li class="logged-in" >
+            <a href="#" class="grey-text modal-trigger" data-target="modal-authuser">Add User</a>
+          </li>
+          <li class="logged-in" >
+            <a href="#" class="grey-text" id="logout">Logout</a>
+          </li>
+          <!-- <li class="logged-in">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-create">Create Guide</a>
+          </li> -->
+          <li class="logged-out">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-login">Login</a>
+          </li>
+          <li class="logged-out">
+            <a href="#" class="grey-text modal-trigger" data-target="modal-signup">Sign up</a>
+          </li>
+        </span>
+      </ul>
+    </div>
+  </nav>
 
-      </script>
+  <!-- SIGN UP MODAL -->
+  <div id="modal-signup" class="modal">
+    <div class="modal-content">
+      <h4>Sign up</h4><br />
+      <form id="signup-form">
+        <div class="input-field">
+          <input type="email" id="signup-email" required />
+          <label for="signup-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="signup-password" required />
+          <label for="signup-password">Choose password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Sign up</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="modal-authuser" class="modal">
+    <div class="modal-content">
+      <h4>Add / Update Authorized User</h4><br />
+      <form id="authuser-form">
+        <div class="input-field">
+          <input type="email" id="authuser-email" required />
+          <label for="signup-email">Email address</label>
+        </div>
+        <p>
+          <label>
+            <input type="checkbox" id="authuser-isfamily"/>
+            <span>Family Member</span>
+          </label><br/>
+          <label>
+            <input type="checkbox" id="authuser-issiteadmin" />
+            <span>Site Admin</span>
+          </label>
+        </p>
+
+        <button class="btn yellow darken-2 z-depth-0">Add/Update User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- LOGIN MODAL -->
+  <div id="modal-login" class="modal">
+    <div class="modal-content">
+      <h4>Login</h4><br />
+      <form id="login-form">
+        <div class="input-field">
+          <input type="email" id="login-email" required />
+          <label for="login-email">Email address</label>
+        </div>
+        <div class="input-field">
+          <input type="password" id="login-password" required />
+          <label for="login-password">Your password</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Login</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ACCOUNT MODAL -->
+  <div id="modal-account" class="modal">
+    <div class="modal-content center-align">
+      <h4>Account details</h4><br />
+      <div class="account-details"></div>
+      <div class="account-extras"></div>
+    </div>
+  </div>
+
+  <!-- CREATE GUIDE MODAL -->
+  <div id="modal-create" class="modal">
+    <div class="modal-content">
+      <h4>Create Guide</h4><br />
+      <form id="create-form">
+        <div class="input-field">
+          <input type="text" id="title" required>
+          <label for="title">Guide Title</label>
+        </div>
+        <div class="input-field">
+          <textarea id="content" class="materialize-textarea" required></textarea>
+          <label for="content">Guide Content</label>
+        </div>
+        <button class="btn yellow darken-2 z-depth-0">Create</button>
+      </form>
+    </div>
+  </div>
+
+  <div id="timeline" style="display:none">
       <div id="actions">
-        <p id="actionph"></p>
+        <p id="actionph" style="display:none"></p>
       </div>
-      <script>
-            fetch('labels.json')
-              .then((r) => r.json())
-              .then((r) => {
-                  var buttonHtml = ""
-                  Object.keys(r.labels).forEach(label => {
-                    let str = `<button class="tlfilter" onclick="show('${label}')">${r.labels[label].title}</button>`
-                    buttonHtml += str
-                  })
-                  document.getElementById("actionph").insertAdjacentHTML("afterend", buttonHtml)
-              });
-      </script>
-      </body>
-</html>   
+
+       <!-- BEGIN Timeline Embed -->
+       <div id='timeline-embed' style="width: 100%"></div>
+  </div>
+
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-storage.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/7.7.0/firebase-functions.js"></script>
+
+  <script>
+    var firebaseConfig = {
+      apiKey: "AIzaSyBGzQcEdo_yrDI52mlnYR5gToVr7dZa6yQ",
+      authDomain: "family-aca65.firebaseapp.com",
+      databaseURL: "https://family-aca65.firebaseio.com",
+      projectId: "family-aca65",
+      storageBucket: "family-aca65.appspot.com",
+      messagingSenderId: "1044547144472",
+      appId: "1:1044547144472:web:0b0fc3e58227ae59c2ac6d"
+    };
+    firebase.initializeApp(firebaseConfig);
+      
+    // make auth and firestore references
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    const storage = firebase.storage();
+    const functions = firebase.functions();
+
+    // update firestore settings
+    db.settings({});
+  </script>
+
+
+  <!-- 3 -->
+  <script type="text/javascript">
+    let jsonFromFirebase = true;
+    var additionalOptions = {
+      font: "Default",
+      lang: "en",
+      initial_zoom: 2
+    };
+
+
+
+    function show(label) {
+      if (jsonFromFirebase) {
+      let jsonPath = `json/sethfamily-${label}.json`
+
+      storage.ref().child(jsonPath).getDownloadURL()
+        .then(url => fetch(url))
+        .then((res) => res.json())
+        .then(timelinejson => {
+                      timeline = new TL.Timeline('timeline-embed',
+                      timelinejson,
+                      additionalOptions);
+        })
+        .catch(error => {
+              console.log(error)
+        })
+      } else {
+      timeline = new TL.Timeline('timeline-embed',
+        `json/sethfamily-${label}.json`,
+        additionalOptions);
+      }
+    }
+
+  </script>
+  <script>
+      fetch('labels.json')
+        .then((r) => r.json())
+        .then((r) => {
+              var buttonHtml = ""
+              Object.keys(r.labels).forEach(label => {
+                let str = `<button class="tlfilter" onclick="show('${label}')">${r.labels[label].title}</button>`
+                buttonHtml += str
+              })
+              document.getElementById("actionph").insertAdjacentHTML("afterend", buttonHtml)
+          });
+  </script>
+
+  <!-- The core Firebase JS SDK is always required and must be listed first -->
+  <!-- Compiled and minified JavaScript -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+  <script src="scripts/admin.js"></script>
+  <script src="scripts/auth.js"></script>
+  <script src="scripts/index.js"></script>
+</body>
+</html>
+

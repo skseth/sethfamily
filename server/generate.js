@@ -181,13 +181,14 @@ function generateResult(label, lab_results) {
 }
 
 function containsLabel(filterlabel, labelstr) {
+    if (!labelstr) {
+        return false
+    }
+
     if (filterlabel == "all") {
         return true;
     }
 
-    if (!labelstr) {
-        return false
-    }
 
     var labels = labelstr.split(",").map(item => item.trim());
 
