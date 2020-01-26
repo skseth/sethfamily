@@ -6,20 +6,23 @@ const admin = require('firebase-admin')
 admin.initializeApp(functions.config().firebase);
 const db = admin.firestore();
 
-function updateUserClaimByEmail(email) {
-    return admin.auth().getUserByEmail(email)
-        .then(function(userRecord) {
-            return updateUserClaim(userRecord.uid, email)
-        }).catch(err => {
-            if (err.code == "auth/user-not-found") {
-                console.log(`user ${email} has not yet signed up. Not creating claims.`)
-            }
-        })
+async function updateUserClaimByEmail(email) {
+    try {
+        const userRecord = await admin.auth().getUserByEmail(email)
+        updateUserClaim(userRecord.uid, email)
+    } catch(err) {
+        if (err.code == "auth/user-not-found") {
+            // if user does not exist, then we return with no error
+            console.log(`user ${email} has not yet signed up. Not creating claims.`)
+        } else {
+            console.log(`unexpected error in updating claims for user ${email}`)
+            throw err
+        }
+    }
 }
 
-function updateUserClaim(uid, email) {
-    let authorizedRef = db.collection('authorizedUsers').doc(email);
-
+async function updateUserClaim(uid, email) {
+    // default claims if user is not in authorizedUsers
     let claims = {
         isGuest: false,
         isFamily: false,
@@ -27,41 +30,36 @@ function updateUserClaim(uid, email) {
         isFamilyAdmin: false
     }
 
+    // get user details from authorizedUsers if it exists
+    let authUserRef = await db.collection('authorizedUsers').doc(email).get()
 
-    return authorizedRef.get().then(authuser => {
-        if (authuser.exists) {
-            console.log(`Updating user claims for ${email}: User exists.`)
-            let au = authuser.data()
+    // User is authorized, so at least guest privileges should be granted
+    if (authUserRef.exists) {
+        let authUser = authuser.data()
 
-            if (au.isFamily) {
-                claims.isFamily = true;
-            } else {
-                claims.isGuest = true;
-            }
-
-            if (au.isSiteAdmin) {
-                claims.isSiteAdmin = true;
-            }
+        if (au.isFamily) {
+            claims.isFamily = true;
         } else {
-            console.log(`Updating user claims for ${email}: User does not exist.`)
+            claims.isGuest = true;
         }
 
-        return admin.auth().setCustomUserClaims(uid,claims).then(() => {
-            console.log(`Updating user claims for ${email}: isGuest: ${claims.isGuest}, isFamily: ${claims.isFamily}, isSiteAdmin: ${claims.isSiteAdmin}`)
-        })
-    }).catch(err => {
-        console.log(`Updating user claims for ${email}: error ${err}`)
-    })
+        if (au.isSiteAdmin) {
+            claims.isSiteAdmin = true;
+        }
+
+    } 
+
+    await admin.auth().setCustomUserClaims(uid,claims)
+    console.log(`Updating user claims for ${email}: isGuest: ${claims.isGuest}, isFamily: ${claims.isFamily}, isSiteAdmin: ${claims.isSiteAdmin}`)
 }
 
-exports.onUserCreate = functions.auth.user().onCreate((user) => {    
+exports.onUserCreate = functions.auth.user().onCreate(async (user) => {    
     if (user.email) {
-        updateUserClaim(user.uid, user.email)
+        await updateUserClaim(user.uid, user.email)
     }
 });
 
-
-exports.addOrUpdateAuthorizedUser = functions.https.onCall((data, context) => {
+exports.addOrUpdateAuthorizedUser = functions.https.onCall(async (data, context) => {
     if (!context.auth) {
         throw new functions.https.HttpsError('unauthenticated', 'user is not authenticated')
     }
@@ -80,16 +78,17 @@ exports.addOrUpdateAuthorizedUser = functions.https.onCall((data, context) => {
 
     const {isFamily = false, isSiteAdmin = false, isFamilyAdmin = false} = authuser;
 
-    let authorizedRef = db.collection('authorizedUsers').doc(authuser.email);
+    try {
+        const authorizedRef = db.collection('authorizedUsers').doc(authuser.email);
 
-    return authorizedRef.set({
-        isFamily: isFamily, 
-        isFamilyAdmin: isFamilyAdmin,
-        isSiteAdmin: isSiteAdmin
-    })
-    .then(() => updateUserClaimByEmail(authuser.email))
-    .catch(err => {
-        throw new functions.https.HttpsError('internal', `unexpected error adding authorized user ${err.message}`)
-    });
+        await authorizedRef.set({
+            isFamily: isFamily, 
+            isFamilyAdmin: isFamilyAdmin,
+            isSiteAdmin: isSiteAdmin
+        })
 
+        await updateUserClaimByEmail(authuser.email)
+    } catch(err) {
+        throw new functions.https.HttpsError('internal', `Unexpected error adding authorized user ${err.message}`)
+    }
 })
